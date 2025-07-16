@@ -24,17 +24,17 @@ export const data = {
   navMain: [
     {
       title: "Inicio",
-      url: "#",
+      url: "dashboard",
       icon: HomeIcon,
     },
     {
       title: "Productos",
-      url: "#",
+      url: "material",
       icon: AdjustmentsHorizontalIcon,
     },
     {
       title: "Unidades de Medida",
-      url: "#",
+      url: "medidas",
       icon: ChartBarIcon,
     },
     {

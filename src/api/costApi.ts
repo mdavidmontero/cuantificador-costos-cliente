@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const costsApi = axios.create({
-  baseURL: import.meta.env.VITE_costsApi_URL,
+  baseURL: import.meta.env.VITE_APP_URL,
 });
 
 costsApi.interceptors.request.use((config) => {
