@@ -17,7 +17,7 @@ export default function AppLayout() {
       <SidebarInset>
         <SiteHeader />
 
-        <main className="flex flex-1 flex-col min-h-screen bg-muted">
+        <main className="flex flex-1 flex-col min-h-screen bg-[#f0f9ff]">
           <section className="flex flex-col gap-6 py-6 px-4 md:px-8 @container/main">
             <div className="w-full max-w-7xl mx-auto">
               <Outlet />

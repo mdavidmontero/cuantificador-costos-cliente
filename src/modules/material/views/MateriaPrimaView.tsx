@@ -17,7 +17,7 @@ export default function MateriaPrimaView() {
       <>
         <h1 className="text-5xl font-black">Mis Materias Primas</h1>
         <p className="text-2x font-light text-gray-500 mt-5 ">
-          Maneja y administra tus Materias Primas
+          Administra tus Materias Primas
         </p>
         <nav className="my-5">
           <Link

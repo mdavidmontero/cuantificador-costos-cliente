@@ -1,9 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import { useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import { getMateriaPrimaById } from "../actions/get-material-by-id";
 import EditMaterialForm from "../components/EditMaterialForm";
 import SpinnerShared from "@/components/shared/spinner/SpinnerShared";
-import NotFoundView from "@/modules/404/views/NotFoundView";
 
 export default function EditProductView() {
   const params = useParams();
@@ -15,7 +14,7 @@ export default function EditProductView() {
   });
 
   if (isLoading) return <SpinnerShared />;
-  if (isError) return <NotFoundView />;
+  if (isError) return <Navigate to="/404" />;
 
   if (data) return <EditMaterialForm data={data} materialId={materialId} />;
 }

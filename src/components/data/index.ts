@@ -2,17 +2,13 @@ import {
   HomeIcon,
   AdjustmentsHorizontalIcon,
   ChartBarIcon,
-  FolderIcon,
   UsersIcon,
-  CameraIcon,
-  DocumentTextIcon,
-  SparklesIcon,
   Cog6ToothIcon,
   QuestionMarkCircleIcon,
   MagnifyingGlassIcon,
-  ArchiveBoxIcon,
   DocumentDuplicateIcon,
   DocumentIcon,
+  CurrencyDollarIcon,
 } from "@heroicons/react/24/outline";
 
 export const data = {
@@ -28,78 +24,24 @@ export const data = {
       icon: HomeIcon,
     },
     {
-      title: "Productos",
+      title: "Materia Prima",
       url: "material",
       icon: AdjustmentsHorizontalIcon,
     },
     {
       title: "Unidades de Medida",
-      url: "medidas",
+      url: "units",
       icon: ChartBarIcon,
     },
     {
-      title: "Categorias",
-      url: "#",
-      icon: FolderIcon,
+      title: "Costos",
+      url: "costs",
+      icon: CurrencyDollarIcon,
     },
     {
       title: "Team",
       url: "#",
       icon: UsersIcon,
-    },
-  ],
-  navClouds: [
-    {
-      title: "Capture",
-      icon: CameraIcon,
-      isActive: true,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-          icon: DocumentTextIcon,
-        },
-        {
-          title: "Archived",
-          url: "#",
-          icon: ArchiveBoxIcon,
-        },
-      ],
-    },
-    {
-      title: "Proposal",
-      icon: DocumentTextIcon,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-          icon: DocumentDuplicateIcon,
-        },
-        {
-          title: "Archived",
-          url: "#",
-          icon: ArchiveBoxIcon,
-        },
-      ],
-    },
-    {
-      title: "Prompts",
-      icon: SparklesIcon,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-          icon: DocumentTextIcon,
-        },
-        {
-          title: "Archived",
-          url: "#",
-          icon: ArchiveBoxIcon,
-        },
-      ],
     },
   ],
   navSecondary: [

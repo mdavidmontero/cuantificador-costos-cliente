@@ -64,7 +64,7 @@ export default function EditMaterialForm({
       >
         <div className="space-y-3 mb-5">
           <label
-            htmlFor="name"
+            htmlFor="nombre"
             className="block mb-1 text-sm font-medium text-gray-700"
           >
             Nombre
