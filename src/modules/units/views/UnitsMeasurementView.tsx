@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { getUnits } from "../actions/get-units.actions";
 import SpinnerShared from "@/components/shared/spinner/SpinnerShared";
 import ListUnits from "../components/ListUnits";
-import ThemeForm from "@/components/shared/search/SearchShared";
 
 export default function UnitsMeasurementView() {
   const { data, isLoading } = useQuery({
@@ -34,7 +33,6 @@ export default function UnitsMeasurementView() {
             No hay Unidades de Medida registradas
           </p>
         )}
-        <ThemeForm />
       </>
     );
 }

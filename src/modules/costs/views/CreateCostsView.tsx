@@ -1,18 +1,24 @@
-import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import CostForm from "../components/CostForm";
-import { useForm } from "react-hook-form";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  FormProvider,
+  useForm,
+  useFieldArray,
+  useWatch,
+} from "react-hook-form";
 import axios from "axios";
 import { toast } from "sonner";
 import type { RegistroCostosFormValues } from "../schemas";
+import CostForm from "../components/CostForm";
 
 export default function CreateCostsView() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const { control, handleSubmit } = useForm<RegistroCostosFormValues>({
+  const methods = useForm<RegistroCostosFormValues>({
     defaultValues: {
-      productoId: "",
+      productoId: 0,
+      organizationId: "",
       materiaPrimaDirecta: [],
       manoObraDirecta: [],
       costosIndirectosFabricacion: [],
@@ -31,8 +37,26 @@ export default function CreateCostsView() {
     },
   });
 
+  const { control, handleSubmit } = methods;
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "materiaPrimaDirecta",
+  });
+
+  const materiaPrimaValues = useWatch({
+    control,
+    name: "materiaPrimaDirecta",
+  });
+
+  const subtotalMateriaPrima =
+    materiaPrimaValues?.reduce(
+      (acc, item) => acc + (item?.costoTotal || 0),
+      0
+    ) ?? 0;
+
   const { mutate, isPending } = useMutation({
-    mutationFn: async (data: any) => {
+    mutationFn: async (data: RegistroCostosFormValues) => {
       const response = await axios.post("/api/costos", data);
       return response.data;
     },
@@ -46,7 +70,7 @@ export default function CreateCostsView() {
     },
   });
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: RegistroCostosFormValues) => {
     mutate(data);
   };
 
@@ -60,22 +84,40 @@ export default function CreateCostsView() {
         un producto.
       </p>
 
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="mt-10 bg-white shadow-lg p-10 rounded-lg space-y-8"
-      >
-        <CostForm control={control} />
+      <FormProvider {...methods}>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="mt-10 bg-white shadow-lg p-10 rounded-lg space-y-8"
+        >
+          <CostForm
+            fields={fields}
+            append={append}
+            remove={remove}
+            control={control}
+            register={methods.register}
+          />
 
-        {/* <div className="flex justify-end">
-          <button
-            type="submit"
-            disabled={isPending}
-            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50"
-          >
-            {isPending ? "Guardando..." : "Guardar registro"}
-          </button>
-        </div> */}
-      </form>
+          {/* Mostrar Subtotal Materia Prima */}
+          <div className="text-right">
+            <p className="text-lg font-semibold">
+              Subtotal Materia Prima:{" "}
+              <span className="text-blue-600 font-bold">
+                ${subtotalMateriaPrima.toFixed(2)}
+              </span>
+            </p>
+          </div>
+
+          <div className="flex justify-end">
+            <button
+              type="submit"
+              disabled={isPending}
+              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+            >
+              {isPending ? "Guardando..." : "Guardar registro"}
+            </button>
+          </div>
+        </form>
+      </FormProvider>
     </div>
   );
 }
