@@ -1,198 +1,238 @@
 import {
   type Control,
-  type FieldArrayWithId,
-  type UseFieldArrayAppend,
-  type UseFieldArrayRemove,
   type UseFormRegister,
-  useFormContext,
-  useWatch,
+  type UseFormWatch,
 } from "react-hook-form";
+import type { RegistroCostosFormValues } from "../schemas";
+import MateriaPrimaDirectaForm from "./MateriaPrimaDirectaForm";
+import ManoObraDirectaForm from "./ManoObraDirectaForm";
+import CostosIndirectosFabricacionForm from "./CostosIndirectosFabricacionForm";
+import ManoObraIndirectaForm from "./ManoObraIndirectaForm";
+import CostosGeneralesForm from "./CostosGeneralesForm";
+import CostosOperacionForm from "./CostosOperacionForm";
+import GastoVentasForm from "./GastoVentasForm";
+import useCostStore from "../store/useCostStore";
+import { useEffect, useMemo } from "react";
+import ConsolidadoCostos from "./ConsolidadoCostos";
+import SearchSelectForm from "@/components/shared/search/SearchShared";
 import { useQuery } from "@tanstack/react-query";
 import { getMateriaPrimas } from "@/modules/material/actions/get-materials.actions";
-import type { RegistroCostosFormValues } from "../schemas";
 import type { SchemaMaterialList } from "@/modules/material/schemas";
-import { useEffect } from "react";
-import SearchSelectForm from "@/components/shared/search/SearchShared";
 
-interface CostFormProps {
+export interface Props {
   control: Control<RegistroCostosFormValues>;
-  fields: FieldArrayWithId<
-    RegistroCostosFormValues,
-    "materiaPrimaDirecta",
-    "id"
-  >[];
-  append: UseFieldArrayAppend<RegistroCostosFormValues, "materiaPrimaDirecta">;
-  remove: UseFieldArrayRemove;
   register: UseFormRegister<RegistroCostosFormValues>;
+  watch: UseFormWatch<RegistroCostosFormValues>;
 }
 
-export default function CostForm({
-  register,
-  control,
-  fields,
-  append,
-  remove,
-}: CostFormProps) {
-  const { data } = useQuery({
-    queryKey: ["getMateriaPrimas"],
+export default function CostForm({ register, control, watch }: Props) {
+  const cantidadFinal = watch("cantidadesFinales");
+  const precioVentaUnitario = watch("costoProduccion.precioVentaUnitario");
+  const { data: productos } = useQuery({
+    queryKey: ["getProductos"],
     queryFn: getMateriaPrimas,
   });
 
-  const { setValue } = useFormContext();
+  const {
+    totalGastosVentas,
+    totalGastosAdministracion,
+    totalMateriaPrimaDirecta,
+    totalManoObraDirecta,
+    totalManoObraIndirecta,
+    totalMateriaPrimaIndirecta,
+    totalCostosGenerales,
+    totalCostosOperacion,
+    totalCostosIndirectosFabricacion,
+    setTotalCostosIndirectosFabricacion,
+    setTotalgastosMercadeo,
+    setTotalCostosOperacion,
+    setTotalGastosProduccion,
+    setMargenUtilidadUnitario,
+    setTotalCostoProduccionUnitario,
+  } = useCostStore();
 
-  const materiaPrima = useWatch({
-    control,
-    name: "materiaPrimaDirecta",
-  });
+  const totalGastosMercadeo = useMemo(
+    () => totalGastosAdministracion + totalGastosVentas,
+    [totalGastosVentas, totalGastosAdministracion]
+  );
+
+  const totalCostosIndirectoFabricaciones = useMemo(
+    () =>
+      totalMateriaPrimaIndirecta +
+      totalManoObraIndirecta +
+      totalCostosGenerales,
+    [totalMateriaPrimaIndirecta, totalManoObraIndirecta, totalCostosGenerales]
+  );
+
+  const totalCostosdeOperacion = useMemo(
+    () => totalGastosAdministracion + totalGastosMercadeo,
+    [totalGastosMercadeo, totalGastosAdministracion]
+  );
+
+  const totalCostosdeProduccion = useMemo(
+    () =>
+      totalMateriaPrimaDirecta +
+      totalManoObraDirecta +
+      totalCostosIndirectosFabricacion +
+      totalCostosOperacion,
+    [
+      totalMateriaPrimaDirecta,
+      totalManoObraDirecta,
+      totalCostosIndirectosFabricacion,
+      totalCostosOperacion,
+    ]
+  );
+
+  const costoProduccionUnitario = useMemo(
+    () => (cantidadFinal ? totalCostosdeProduccion / cantidadFinal : 0),
+    [totalCostosdeProduccion, cantidadFinal]
+  );
+
+  const margenUtilidadUnitario = useMemo(
+    () =>
+      precioVentaUnitario
+        ? ((precioVentaUnitario - costoProduccionUnitario) /
+            precioVentaUnitario) *
+          100
+        : 0,
+    [precioVentaUnitario, costoProduccionUnitario]
+  );
+
   useEffect(() => {
-    if (!materiaPrima) return;
+    setTotalgastosMercadeo(totalGastosMercadeo);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [totalGastosMercadeo]);
 
-    materiaPrima.forEach((item, index) => {
-      const cantidad = item?.cantidad || 0;
-      const costoUnitario = item?.costoUnitario || 0;
-      const total = parseFloat((cantidad * costoUnitario).toFixed(2));
+  useEffect(() => {
+    setTotalCostosIndirectosFabricacion(totalCostosIndirectoFabricaciones);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [totalCostosIndirectoFabricaciones]);
 
-      setValue(`materiaPrimaDirecta.${index}.costoTotal`, total, {
-        shouldValidate: false,
-        shouldDirty: false,
-      });
-    });
-  }, [JSON.stringify(materiaPrima)]);
+  useEffect(() => {
+    setTotalCostosOperacion(totalCostosdeOperacion);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [totalCostosdeOperacion]);
 
+  useEffect(() => {
+    setTotalGastosProduccion(totalCostosdeProduccion);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [totalCostosdeProduccion]);
+  useEffect(() => {
+    setMargenUtilidadUnitario(margenUtilidadUnitario);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [margenUtilidadUnitario]);
+
+  useEffect(() => {
+    setTotalCostoProduccionUnitario(costoProduccionUnitario);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [costoProduccionUnitario]);
   const options =
-    data?.map((item: SchemaMaterialList) => ({
+    productos?.map((item: SchemaMaterialList) => ({
       label: item.nombre,
       value: item.id.toString(),
     })) ?? [];
+
   return (
     <>
-      <div className="space-y-3 mb-5">
-        <label htmlFor="productoId" className="text-sm uppercase font-bold">
-          Producto ID
-        </label>
-        <input
-          id="productoId"
-          type="number"
-          {...register("productoId", { valueAsNumber: true })}
-          className="w-full p-2 rounded-lg border border-gray-200"
-        />
-      </div>
-
-      {/* Detalles generales */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
-        <div className="space-y-1">
-          <label className="text-sm uppercase font-bold">
-            Cantidades Producidas
-          </label>
-          <input
-            type="text"
-            placeholder="Cantidad"
-            className="w-full p-2 rounded-lg border border-gray-200"
-          />
-        </div>
-        <div className="space-y-1">
-          <label className="text-sm uppercase font-bold">
-            Unidad de Medida
-          </label>
-          <input
-            type="text"
-            placeholder="Unidad"
-            className="w-full p-2 rounded-lg border border-gray-200"
-          />
-        </div>
-        <div className="space-y-1">
-          <label className="text-sm uppercase font-bold">
-            Cantidades Finales
-          </label>
-          <input
-            type="text"
-            placeholder="Final"
-            className="w-full p-2 rounded-lg border border-gray-200"
-          />
-        </div>
-      </div>
-
-      <div className="space-y-4 mb-5">
-        <h3 className="font-bold text-lg uppercase">Materia Prima Directa</h3>
-
-        {fields.map((field, index) => (
-          <div
-            key={field.id}
-            className="grid grid-cols-1 md:grid-cols-6 gap-3 border p-4 rounded-lg"
+      <section className="mb-6 ">
+        <h2 className="text-xl font-bold text-gray-800  border-gray-200 pb-2">
+          Datos Generales del Producto
+        </h2>
+        <div className="space-y-3 mb-5">
+          <label
+            htmlFor="productoId"
+            className="text-sm font-semibold uppercase"
           >
-            {/* Campo name con buscador */}
-            <SearchSelectForm
-              name={`materiaPrimaDirecta.${index}.name`}
-              control={control}
-              options={options}
-              placeholder="Buscar nombre de materia prima"
-            />
+            ID del Producto
+          </label>
+          <SearchSelectForm
+            name={"productoId"}
+            control={control}
+            options={options}
+            placeholder="Producto"
+          />
+        </div>
 
-            {/* Campo unidad de medida (manual) */}
-            <input
-              className="border p-2 rounded"
-              {...register(`materiaPrimaDirecta.${index}.unidadMedida`)}
-              placeholder="Unidad"
-            />
-
-            {/* Campo cantidad */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="space-y-1">
+            <label className="text-sm font-semibold uppercase">
+              Cant. Producidas
+            </label>
             <input
               type="number"
-              step="0.01"
-              className="border p-2 rounded"
-              {...register(`materiaPrimaDirecta.${index}.cantidad`, {
-                valueAsNumber: true,
-              })}
+              className="w-full p-2 rounded-lg border border-gray-300"
               placeholder="Cantidad"
-            />
-
-            {/* Campo costo unitario */}
-            <input
-              type="number"
-              step="0.01"
-              className="border p-2 rounded"
-              {...register(`materiaPrimaDirecta.${index}.costoUnitario`, {
+              {...register("cantidadProducida", {
                 valueAsNumber: true,
+                required: "Este campo es obligatorio",
+                min: { value: 0, message: "Debe ser mayor o igual a 0" },
               })}
-              placeholder="Costo Unitario"
             />
-
-            {/* Campo costo total */}
-            <input
-              type="number"
-              className="border p-2 rounded bg-gray-100"
-              {...register(`materiaPrimaDirecta.${index}.costoTotal`, {
-                valueAsNumber: true,
-              })}
-              readOnly
-            />
-
-            <button
-              type="button"
-              className="text-red-600 hover:text-red-800"
-              onClick={() => remove(index)}
-            >
-              Eliminar
-            </button>
           </div>
-        ))}
+          <div className="space-y-1">
+            <label className="text-sm font-semibold uppercase">
+              Unidad de Medida
+            </label>
+            <input
+              type="text"
+              className="w-full p-2 rounded-lg border border-gray-300"
+              placeholder="Ej: kg, und"
+              {...register("unidadMedida", {
+                required: "Este campo es obligatorio",
+              })}
+            />
+          </div>
+          <div className="space-y-1">
+            <label className="text-sm font-semibold uppercase">
+              Perdidas Estimadas
+            </label>
+            <input
+              type="number"
+              className="w-full p-2 rounded-lg border border-gray-300"
+              placeholder="Final"
+              {...register("perdidasEstimadas", {
+                valueAsNumber: true,
+              })}
+            />
+          </div>
+          <div className="space-y-1">
+            <label className="text-sm font-semibold uppercase">
+              Cant. Finales
+            </label>
+            <input
+              type="number"
+              className="w-full p-2 rounded-lg border border-gray-300"
+              placeholder="Final"
+              {...register("cantidadesFinales", {
+                valueAsNumber: true,
+                required: "Este campo es obligatorio",
+                min: { value: 0, message: "Debe ser mayor o igual a 0" },
+              })}
+            />
+          </div>
+        </div>
+      </section>
 
-        <button
-          type="button"
-          onClick={() =>
-            append({
-              name: "",
-              unidadMedida: "",
-              cantidad: 0,
-              costoUnitario: 0,
-              costoTotal: 0,
-            })
-          }
-          className="bg-[#1B5040] hover:bg-[#304b43] text-white px-4 py-2 rounded font-bold"
-        >
-          Agregar Materia Prima
-        </button>
-      </div>
+      <hr className="my-8 border-gray-300" />
+
+      <MateriaPrimaDirectaForm control={control} register={register} />
+      <ManoObraDirectaForm control={control} register={register} />
+      <CostosIndirectosFabricacionForm control={control} register={register} />
+      <ManoObraIndirectaForm control={control} register={register} />
+      <CostosGeneralesForm control={control} register={register} />
+      <CostosOperacionForm control={control} register={register} />
+      <GastoVentasForm control={control} register={register} />
+
+      <hr className="my-8 border-gray-300" />
+
+      <ConsolidadoCostos
+        control={control}
+        register={register}
+        totalCostosIndirectoFabricaciones={totalCostosIndirectoFabricaciones}
+        totalCostosdeProduccion={totalCostosdeProduccion}
+        costoProduccionUnitario={costoProduccionUnitario}
+        margenUtilidadUnitario={margenUtilidadUnitario}
+      />
     </>
   );
 }

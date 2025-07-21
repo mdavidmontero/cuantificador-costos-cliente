@@ -2,6 +2,11 @@ import { z } from "zod";
 
 export const RegistroCostosFormSchema = z.object({
   productoId: z.number().int(),
+  cantidadProducida: z.number(),
+  unidadMedida: z.string(),
+  perdidasEstimadas: z.number(),
+  cantidadesFinales: z.number(),
+
   organizationId: z.string().uuid(),
 
   materiaPrimaDirecta: z.array(
@@ -38,6 +43,7 @@ export const RegistroCostosFormSchema = z.object({
     z.object({
       nombre: z.string(),
       unidadMedida: z.string(),
+      cantidad: z.number(),
       costoUnitario: z.number(),
       costoTotal: z.number(),
     })
@@ -47,7 +53,6 @@ export const RegistroCostosFormSchema = z.object({
     z.object({
       nombre: z.string(),
       valorTotal: z.number(),
-      costosTotales: z.number(),
     })
   ),
 
@@ -55,7 +60,6 @@ export const RegistroCostosFormSchema = z.object({
     z.object({
       nombre: z.string(),
       valorTotal: z.number(),
-      totales: z.number(),
     })
   ),
 
@@ -63,7 +67,6 @@ export const RegistroCostosFormSchema = z.object({
     z.object({
       nombre: z.string(),
       valorTotal: z.number(),
-      totales: z.number(),
     })
   ),
 

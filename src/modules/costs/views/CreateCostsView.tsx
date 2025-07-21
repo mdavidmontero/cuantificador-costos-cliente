@@ -1,23 +1,38 @@
 import { useNavigate } from "react-router-dom";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  FormProvider,
-  useForm,
-  useFieldArray,
-  useWatch,
-} from "react-hook-form";
-import axios from "axios";
+import { useMutation } from "@tanstack/react-query";
+import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type { RegistroCostosFormValues } from "../schemas";
 import CostForm from "../components/CostForm";
+import useCostStore from "../store/useCostStore";
+import { createCost } from "../actions/create-cost.actions";
 
 export default function CreateCostsView() {
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
+  const totalgastosMercadeo = useCostStore(
+    (state) => state.totalgastosMercadeo
+  );
+  const totalCostosOperacion = useCostStore(
+    (state) => state.totalCostosOperacion
+  );
+  const totalGastosProduccion = useCostStore(
+    (state) => state.totalGastosProduccion
+  );
+  const totalCostoProduccionUnitario = useCostStore(
+    (state) => state.totalCostoProduccionUnitario
+  );
+
+  const margenUtilidadUnitario = useCostStore(
+    (state) => state.margenUtilidadUnitario
+  );
 
   const methods = useForm<RegistroCostosFormValues>({
     defaultValues: {
       productoId: 0,
+      cantidadProducida: 0,
+      unidadMedida: "",
+      perdidasEstimadas: 0,
+      cantidadesFinales: 0,
       organizationId: "",
       materiaPrimaDirecta: [],
       manoObraDirecta: [],
@@ -39,43 +54,50 @@ export default function CreateCostsView() {
 
   const { control, handleSubmit } = methods;
 
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: "materiaPrimaDirecta",
-  });
-
-  const materiaPrimaValues = useWatch({
-    control,
-    name: "materiaPrimaDirecta",
-  });
-
-  const subtotalMateriaPrima =
-    materiaPrimaValues?.reduce(
-      (acc, item) => acc + (item?.costoTotal || 0),
-      0
-    ) ?? 0;
-
   const { mutate, isPending } = useMutation({
-    mutationFn: async (data: RegistroCostosFormValues) => {
-      const response = await axios.post("/api/costos", data);
-      return response.data;
+    mutationFn: createCost,
+    onSuccess: (data) => {
+      toast.success(data);
+      // queryClient.invalidateQueries({ queryKey: ["costos"] });
+      navigate(-1);
     },
-    onSuccess: () => {
-      toast.success("Registro creado con éxito");
-      queryClient.invalidateQueries({ queryKey: ["costos"] });
-      navigate("/costos");
-    },
-    onError: () => {
-      toast.error("Hubo un error al guardar el registro");
+    onError: (error) => {
+      toast.error(error.message);
     },
   });
 
   const onSubmit = (data: RegistroCostosFormValues) => {
-    mutate(data);
+    const formData: RegistroCostosFormValues = {
+      productoId: data.productoId,
+      cantidadProducida: data.cantidadProducida,
+      unidadMedida: data.unidadMedida,
+
+      perdidasEstimadas: data.perdidasEstimadas,
+      cantidadesFinales: data.cantidadesFinales,
+      organizationId: "0ab6a1ca-ea1b-46b7-acfa-51cc76be5e7f",
+      materiaPrimaDirecta: data.materiaPrimaDirecta,
+      manoObraDirecta: data.manoObraDirecta,
+      costosIndirectosFabricacion: data.costosIndirectosFabricacion,
+      manoObraIndirecta: data.manoObraIndirecta,
+      costosGenerales: data.costosGenerales,
+      costosOperacion: data.costosOperacion,
+      gastosVentas: data.gastosVentas,
+      costoProduccion: {
+        totalGastosMercadeo: totalgastosMercadeo,
+        totalCostosOperacion: totalCostosOperacion,
+        totalGastosProduccion: totalGastosProduccion,
+        totalCostoProduccionUnitario: totalCostoProduccionUnitario,
+        precioVentaUnitario: data.costoProduccion.precioVentaUnitario,
+        margenUtilidadUnitario: margenUtilidadUnitario,
+      },
+    };
+    console.log("datos", formData);
+    // return;
+    mutate(formData);
   };
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="max-w-5xl mx-auto ">
       <h1 className="text-4xl font-bold tracking-tight">
         Costo de Producción por Producto
       </h1>
@@ -90,31 +112,29 @@ export default function CreateCostsView() {
           className="mt-10 bg-white shadow-lg p-10 rounded-lg space-y-8"
         >
           <CostForm
-            fields={fields}
-            append={append}
-            remove={remove}
             control={control}
             register={methods.register}
+            watch={methods.watch}
           />
 
-          {/* Mostrar Subtotal Materia Prima */}
-          <div className="text-right">
+          {/* <div className="text-right">
             <p className="text-lg font-semibold">
               Subtotal Materia Prima:{" "}
               <span className="text-blue-600 font-bold">
                 ${subtotalMateriaPrima.toFixed(2)}
               </span>
             </p>
-          </div>
+          </div> */}
 
-          <div className="flex justify-end">
+          <div className="flex justify-center items-center">
             <button
               type="submit"
               disabled={isPending}
-              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50 w-full"
             >
               {isPending ? "Guardando..." : "Guardar registro"}
             </button>
+            {totalgastosMercadeo}
           </div>
         </form>
       </FormProvider>
