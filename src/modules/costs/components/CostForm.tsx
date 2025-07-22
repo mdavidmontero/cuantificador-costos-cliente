@@ -16,8 +16,8 @@ import { useEffect, useMemo } from "react";
 import ConsolidadoCostos from "./ConsolidadoCostos";
 import SearchSelectForm from "@/components/shared/search/SearchShared";
 import { useQuery } from "@tanstack/react-query";
-import { getMateriaPrimas } from "@/modules/material/actions/get-materials.actions";
 import type { SchemaMaterialList } from "@/modules/material/schemas";
+import { getProducts } from "@/modules/products/actions/get-products.actions";
 
 export interface Props {
   control: Control<RegistroCostosFormValues>;
@@ -30,7 +30,7 @@ export default function CostForm({ register, control, watch }: Props) {
   const precioVentaUnitario = watch("costoProduccion.precioVentaUnitario");
   const { data: productos } = useQuery({
     queryKey: ["getProductos"],
-    queryFn: getMateriaPrimas,
+    queryFn: getProducts,
   });
 
   const {

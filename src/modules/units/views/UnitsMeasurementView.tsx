@@ -9,7 +9,6 @@ export default function UnitsMeasurementView() {
     queryKey: ["getUnitsMeasurements"],
     queryFn: getUnits,
   });
-  console.log(data);
   if (isLoading) return <SpinnerShared />;
   if (data)
     return (
@@ -26,7 +25,7 @@ export default function UnitsMeasurementView() {
             Nueva Unidad de Medida
           </Link>
         </nav>
-        {data ? (
+        {data.length ? (
           <ListUnits data={data} />
         ) : (
           <p className="text-center py-20">

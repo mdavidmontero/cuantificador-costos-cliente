@@ -1,6 +1,14 @@
+import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
+import { getCostsAll } from "../actions/get-cost-by-id";
+import ListCost from "../components/LisCost";
 
 export default function CalculateCostsView() {
+  const { data } = useQuery({
+    queryKey: ["getCostsAll"],
+    queryFn: getCostsAll,
+  });
+  console.log(data);
   return (
     <>
       <h1 className="text-5xl font-black">Calcular Costos</h1>
@@ -15,6 +23,11 @@ export default function CalculateCostsView() {
           Calcular Costo
         </Link>
       </nav>
+      {data?.length ? (
+        <ListCost data={data || []} />
+      ) : (
+        <p className="text-center py-20">No hay Costos registrados</p>
+      )}
     </>
   );
 }

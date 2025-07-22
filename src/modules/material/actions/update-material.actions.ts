@@ -11,7 +11,6 @@ export const updateMateriaPrima = async ({
   materialId,
 }: MaterialType) => {
   try {
-    console.log(formData);
     const { data } = await costsApi.patch(
       `/material/update-materia/${materialId}`,
       formData

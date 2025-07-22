@@ -67,7 +67,7 @@ export default function ManoObraIndirectaForm({ control, register }: Props) {
   const optionsUnidad =
     unidadMedida?.map((item: MeasurementForm) => ({
       label: item.name,
-      value: item.id.toString(),
+      value: item.name,
     })) ?? [];
   return (
     <>

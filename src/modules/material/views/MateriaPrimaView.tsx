@@ -27,7 +27,7 @@ export default function MateriaPrimaView() {
             Nueva Materia Prima
           </Link>
         </nav>
-        {data ? (
+        {data.length ? (
           <ListMaterial data={data} />
         ) : (
           <p className="text-center py-20">

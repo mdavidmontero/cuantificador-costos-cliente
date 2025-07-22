@@ -9,12 +9,18 @@ import CreateUnitView from "@/modules/units/views/CreateUnitView";
 import EditUnitView from "@/modules/units/views/EditUnitView";
 import CalculateCostsView from "@/modules/costs/views/CalculateCostsView";
 import CreateCostsView from "@/modules/costs/views/CreateCostsView";
+import ProductsView from "@/modules/products/views/ProductsView";
+import CreateProductsView from "@/modules/products/views/CreateProductsView";
+import EditProductsView from "@/modules/products/views/EditProductsView";
 
 export default function Router() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<AppLayout />}>
+          <Route path="/productos" element={<ProductsView />} />
+          <Route path="/product/create" element={<CreateProductsView />} />
+          <Route path="/product/edit/:id" element={<EditProductsView />} />
           <Route path="/material" element={<MateriaPrimaView />} />
           <Route path="/material/create" element={<CreateProductView />} />
           <Route path="/material/edit/:id" element={<EditProductView />} />

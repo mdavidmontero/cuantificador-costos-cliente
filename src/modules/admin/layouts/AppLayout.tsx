@@ -14,12 +14,13 @@ export default function AppLayout() {
       }
     >
       <AppSidebar variant="inset" />
+
       <SidebarInset>
         <SiteHeader />
 
-        <main className="flex flex-1 flex-col min-h-screen bg-[#f0f9ff]">
-          <section className="flex flex-col gap-6 py-6 px-4 md:px-8 @container/main">
-            <div className="w-full max-w-7xl mx-auto">
+        <main className="flex flex-1 flex-col bg-[#f0f9ff]">
+          <section className="w-full px-4 md:px-8 py-8">
+            <div className="mx-auto w-full max-w-screen-xl space-y-6 @container/main">
               <Outlet />
             </div>
           </section>

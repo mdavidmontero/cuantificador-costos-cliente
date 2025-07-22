@@ -24,6 +24,11 @@ export const data = {
       icon: HomeIcon,
     },
     {
+      title: "Productos",
+      url: "productos",
+      icon: AdjustmentsHorizontalIcon,
+    },
+    {
       title: "Materia Prima",
       url: "material",
       icon: AdjustmentsHorizontalIcon,

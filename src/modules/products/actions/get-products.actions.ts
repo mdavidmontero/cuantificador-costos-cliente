@@ -1,11 +1,11 @@
 import costsApi from "@/api/costApi";
 import { isAxiosError } from "axios";
-import { UnitSchemaList } from "../schemas";
+import { ProductSchemaList } from "../schemas";
 
-export const getUnits = async () => {
+export const getProducts = async () => {
   try {
-    const { data } = await costsApi.get("/units/get-units");
-    const response = UnitSchemaList.safeParse(data);
+    const { data } = await costsApi.get("/product/get-products");
+    const response = ProductSchemaList.safeParse(data);
     if (response.success) {
       return response.data;
     }

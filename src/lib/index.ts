@@ -5,3 +5,8 @@ export function formattCurrency(value: number) {
     minimumFractionDigits: 2,
   }).format(value);
 }
+
+export const formattDate = (date: string) => {
+  const fecha = new Date(date).toLocaleDateString();
+  return fecha;
+};

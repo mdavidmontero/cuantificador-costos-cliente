@@ -71,7 +71,7 @@ export default function CostosIndirectosFabricacionForm({
   const optionsUnidad =
     unidadMedida?.map((item: MeasurementForm) => ({
       label: item.name,
-      value: item.id.toString(),
+      value: item.name,
     })) ?? [];
   return (
     <>
