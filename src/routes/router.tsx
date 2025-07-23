@@ -12,11 +12,19 @@ import CreateCostsView from "@/modules/costs/views/CreateCostsView";
 import ProductsView from "@/modules/products/views/ProductsView";
 import CreateProductsView from "@/modules/products/views/CreateProductsView";
 import EditProductsView from "@/modules/products/views/EditProductsView";
+import CostDetailView from "@/modules/costs/views/CostDetailView";
+import AuthLayout from "@/modules/auth/layout/AuthLayout";
+import LoginView from "@/modules/auth/views/LoginView";
+import RegisterView from "@/modules/auth/views/RegisterView";
 
 export default function Router() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route element={<AuthLayout />}>
+          <Route path="/auth/login" element={<LoginView />} />
+          <Route path="/auth/register" element={<RegisterView />} />
+        </Route>
         <Route path="/" element={<AppLayout />}>
           <Route path="/productos" element={<ProductsView />} />
           <Route path="/product/create" element={<CreateProductsView />} />
@@ -29,6 +37,7 @@ export default function Router() {
           <Route path="/units/edit/:id" element={<EditUnitView />} />
           <Route path="/costs" element={<CalculateCostsView />} />
           <Route path="/costs/create" element={<CreateCostsView />} />
+          <Route path="/costs/:id" element={<CostDetailView />} />
         </Route>
         <Route path="/*" element={<NotFoundView />} />
       </Routes>
