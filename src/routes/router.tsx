@@ -16,6 +16,7 @@ import CostDetailView from "@/modules/costs/views/CostDetailView";
 import AuthLayout from "@/modules/auth/layout/AuthLayout";
 import LoginView from "@/modules/auth/views/LoginView";
 import RegisterView from "@/modules/auth/views/RegisterView";
+import DashboardView from "@/modules/dashboard/views/DashboardView";
 
 export default function Router() {
   return (
@@ -26,6 +27,7 @@ export default function Router() {
           <Route path="/auth/register" element={<RegisterView />} />
         </Route>
         <Route path="/" element={<AppLayout />}>
+          <Route path="/dashboard" element={<DashboardView />} />
           <Route path="/productos" element={<ProductsView />} />
           <Route path="/product/create" element={<CreateProductsView />} />
           <Route path="/product/edit/:id" element={<EditProductsView />} />
