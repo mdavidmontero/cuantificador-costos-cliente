@@ -9,6 +9,7 @@ export const login = async (formData: LoginFormData) => {
     return data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {
+      console.log(error);
       throw new Error(error.response.data.error);
     }
   }

@@ -17,6 +17,8 @@ import AuthLayout from "@/modules/auth/layout/AuthLayout";
 import LoginView from "@/modules/auth/views/LoginView";
 import RegisterView from "@/modules/auth/views/RegisterView";
 import DashboardView from "@/modules/dashboard/views/DashboardView";
+import UsersView from "@/modules/users/views/UsersView";
+import CreateUserView from "@/modules/users/views/CreateUserView";
 
 export default function Router() {
   return (
@@ -28,6 +30,8 @@ export default function Router() {
         </Route>
         <Route path="/" element={<AppLayout />}>
           <Route path="/dashboard" element={<DashboardView />} />
+          <Route path="/users" element={<UsersView />} />
+          <Route path="/users/create" element={<CreateUserView />} />
           <Route path="/productos" element={<ProductsView />} />
           <Route path="/product/create" element={<CreateProductsView />} />
           <Route path="/product/edit/:id" element={<EditProductsView />} />

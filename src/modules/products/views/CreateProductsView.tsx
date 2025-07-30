@@ -133,7 +133,7 @@ export default function CreateProductsView() {
                   disabled={isLoading}
                 />
                 {errors.nombre && (
-                  <div className="absolute -bottom-6 left-0">
+                  <div className="p-2">
                     <ErrorMessage>{errors.nombre.message}</ErrorMessage>
                   </div>
                 )}

@@ -4,10 +4,8 @@ import {
   Home,
   Package,
   DollarSign,
-  BarChart3,
   Settings,
   Users,
-  FileText,
   TrendingUp,
   Calculator,
 } from "lucide-react";
@@ -37,28 +35,28 @@ const navigationItems = [
       { title: "Materia", url: "/material", icon: Calculator, badge: null },
     ],
   },
-  {
-    title: "Análisis",
-    items: [
-      { title: "Reportes", url: "/reportes", icon: FileText, badge: null },
-      {
-        title: "Estadísticas",
-        url: "/estadisticas",
-        icon: BarChart3,
-        badge: "Nuevo",
-      },
-      {
-        title: "Tendencias",
-        url: "/tendencias",
-        icon: TrendingUp,
-        badge: null,
-      },
-    ],
-  },
+  // {
+  //   title: "Análisis",
+  //   items: [
+  //     { title: "Reportes", url: "/reportes", icon: FileText, badge: null },
+  //     {
+  //       title: "Estadísticas",
+  //       url: "/estadisticas",
+  //       icon: BarChart3,
+  //       badge: "Nuevo",
+  //     },
+  //     {
+  //       title: "Tendencias",
+  //       url: "/tendencias",
+  //       icon: TrendingUp,
+  //       badge: null,
+  //     },
+  //   ],
+  // },
   {
     title: "Administración",
     items: [
-      { title: "Usuarios", url: "/usuarios", icon: Users, badge: null },
+      { title: "Usuarios", url: "/users", icon: Users, badge: null },
       {
         title: "Configuración",
         url: "/configuracion",

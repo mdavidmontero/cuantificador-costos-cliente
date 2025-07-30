@@ -133,7 +133,7 @@ export default function CreateMaterialView() {
                   disabled={isLoading}
                 />
                 {errors.name && (
-                  <div className="absolute -bottom-6 left-0">
+                  <div className="p-2">
                     <ErrorMessage>{errors.name.message}</ErrorMessage>
                   </div>
                 )}

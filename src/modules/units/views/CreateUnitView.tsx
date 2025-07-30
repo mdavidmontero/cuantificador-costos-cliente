@@ -1,5 +1,3 @@
-"use client";
-
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -140,7 +138,7 @@ export default function CreateUnitView() {
                   disabled={isLoading}
                 />
                 {errors.name && (
-                  <div className="absolute -bottom-6 left-0">
+                  <div className="p-2">
                     <ErrorMessage>{errors.name.message}</ErrorMessage>
                   </div>
                 )}
