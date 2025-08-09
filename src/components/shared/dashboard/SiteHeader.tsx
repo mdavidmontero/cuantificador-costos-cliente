@@ -12,25 +12,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useQueryClient } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
-import { userAuthStore } from "@/modules/auth/store/useAuthStore";
+import { useAuthStore } from "@/modules/auth/store/auth.store";
 
 export function SiteHeader() {
-  const queryClient = useQueryClient();
-  const navigate = useNavigate();
-  const user = userAuthStore((state) => state.user);
+  const { user, logout } = useAuthStore();
 
-  const logout = async () => {
-    try {
-      localStorage.removeItem("AUTH_TOKEN");
-      queryClient.setQueryData(["user"], null);
-      await queryClient.invalidateQueries({ queryKey: ["user"] });
-      navigate("/auth/login", { replace: true });
-    } catch (error) {
-      console.error("Error al cerrar sesión:", error);
-    }
-  };
   return (
     <header className="sticky top-0 z-40 w-full border-b border-white/30 bg-white/80 backdrop-blur-md supports-[backdrop-filter]:bg-white/70">
       <div className="flex h-16 items-center justify-between px-4 md:px-8">

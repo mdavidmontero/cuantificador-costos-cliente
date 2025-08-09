@@ -2,16 +2,15 @@ import type React from "react";
 import { AppSidebar } from "@/components/shared/dashboard/AdminSidebar";
 import { SiteHeader } from "@/components/shared/dashboard/SiteHeader";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { Navigate, Outlet } from "react-router-dom";
-import { useAuth } from "@/modules/auth/hooks/useAuth";
+import { Outlet } from "react-router-dom";
 import { TopLoader } from "@/components/TopLoader";
 
 export default function AppLayout() {
-  const { data, isError, isLoading } = useAuth();
+  // const { data, isError, isLoading } = useAuth();
 
-  if (isLoading) return "Cargando...";
-  if (isError) return <Navigate to="/auth/login" replace />;
-  if (!data) return null;
+  // if (isLoading) return "Cargando...";
+  // if (isError) return <Navigate to="/auth/login" replace />;
+  // if (!data) return null;
   return (
     <>
       <TopLoader />

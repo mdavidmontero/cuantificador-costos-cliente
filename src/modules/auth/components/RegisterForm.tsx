@@ -38,8 +38,8 @@ export default function RegisterForm() {
 
   const { mutate, isPending } = useMutation({
     mutationFn: createAccount,
-    onSuccess: (data) => {
-      toast.success(data);
+    onSuccess: () => {
+      toast.success("Cuenta creada correctamente");
     },
     onError: (error) => {
       toast.error(error.message);
@@ -333,7 +333,7 @@ export default function RegisterForm() {
         <p className="text-gray-600">
           ¿Ya tienes una cuenta?{" "}
           <Link
-            to="/login"
+            to="/auth/login"
             className="text-blue-600 hover:text-blue-800 font-semibold hover:underline transition-colors"
           >
             Inicia sesión aquí

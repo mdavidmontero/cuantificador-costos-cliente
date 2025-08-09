@@ -1,13 +1,13 @@
-import { Navigate, Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { Calculator, TrendingUp, BarChart3, Shield } from "lucide-react";
-import { useAuth } from "../hooks/useAuth";
+// import { useAuth } from "../hooks/useAuth";
 
 export default function AuthLayout() {
-  const { data, isLoading } = useAuth();
-  if (isLoading) return "Cargando...";
-  if (data) {
-    return <Navigate to="/" replace />;
-  }
+  // const { data, isLoading } = useAuth();
+  // if (isLoading) return "Cargando...";
+  // if (data) {
+  //   return <Navigate to="/" replace />;
+  // }
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex">
       {/* Left Side - Branding */}

@@ -1,16 +1,18 @@
 import { isAxiosError } from "axios";
 import type { LoginFormData } from "../schemas";
 import costsApi from "@/api/costApi";
+import type { AuthResponse } from "../types";
 
-export const login = async (formData: LoginFormData) => {
+export const loginAction = async (
+  formData: LoginFormData
+): Promise<AuthResponse> => {
   try {
-    const { data } = await costsApi.post(`/auth/login`, formData);
-    localStorage.setItem("AUTH_TOKEN", data);
+    const { data } = await costsApi.post<AuthResponse>(`/auth/login`, formData);
     return data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {
-      console.log(error);
       throw new Error(error.response.data.error);
     }
+    throw new Error("Error al intentar iniciar sesión");
   }
 };

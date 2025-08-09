@@ -8,12 +8,13 @@ import { Label } from "@/components/ui/label";
 import { Eye, EyeOff, Mail, Lock, LogIn, Loader2 } from "lucide-react";
 import type { LoginFormData } from "../types";
 import { useMutation } from "@tanstack/react-query";
-import { login } from "../actions/login.actions";
 import { toast } from "sonner";
+import { useAuthStore } from "../store/auth.store";
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+  const { login } = useAuthStore();
 
   const {
     register,
@@ -24,6 +25,7 @@ export default function LoginForm() {
   const { mutate, isPending } = useMutation({
     mutationKey: ["login"],
     mutationFn: login,
+    retry: false,
     onSuccess: () => {
       navigate("/");
     },
@@ -32,7 +34,7 @@ export default function LoginForm() {
     },
   });
 
-  const onSubmit = async (data: LoginFormData) => {
+  const onSubmit = (data: LoginFormData) => {
     mutate(data);
   };
 
@@ -179,7 +181,7 @@ export default function LoginForm() {
         <p className="text-gray-600">
           ¿No tienes una cuenta?{" "}
           <Link
-            to="/register"
+            to="/auth/register"
             className="text-blue-600 hover:text-blue-800 font-semibold hover:underline transition-colors"
           >
             Regístrate aquí

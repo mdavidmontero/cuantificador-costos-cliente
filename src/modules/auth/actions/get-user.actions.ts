@@ -5,7 +5,6 @@ import { isAxiosError } from "axios";
 export async function getUser() {
   try {
     const { data } = await costsApi("/auth/user");
-    console.log(data);
     const response = userSchema.safeParse(data);
     console.log(response);
     if (response.success) {

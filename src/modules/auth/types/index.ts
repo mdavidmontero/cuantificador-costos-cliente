@@ -1,3 +1,5 @@
+import type { User } from "../schemas";
+
 export interface LoginFormData {
   email: string;
   password: string;
@@ -10,4 +12,9 @@ export interface RegisterFormData {
   password_confirmation: string;
   nameOrganization: string;
   nit: string;
+}
+
+export interface AuthResponse {
+  user: User;
+  token: string;
 }

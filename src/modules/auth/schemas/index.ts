@@ -22,7 +22,7 @@ export const userSchema = z.object({
   id: z.string(),
   name: z.string(),
   email: z.string(),
-  role: z.string(),
+  roles: z.array(z.string()),
   image: z.string().nullable(),
   organizationId: z.string(),
   organization: z.object({

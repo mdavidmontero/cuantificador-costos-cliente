@@ -1,52 +1,137 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import AppLayout from "@/modules/admin/layouts/AppLayout";
-import MateriaPrimaView from "@/modules/material/views/MateriaPrimaView";
-import CreateProductView from "@/modules/material/views/CreateProductView";
-import EditProductView from "@/modules/material/views/EditProductView";
-import NotFoundView from "@/modules/404/views/NotFoundView";
-import UnitsMeasurementView from "@/modules/units/views/UnitsMeasurementView";
-import CreateUnitView from "@/modules/units/views/CreateUnitView";
-import EditUnitView from "@/modules/units/views/EditUnitView";
-import CalculateCostsView from "@/modules/costs/views/CalculateCostsView";
-import CreateCostsView from "@/modules/costs/views/CreateCostsView";
-import ProductsView from "@/modules/products/views/ProductsView";
-import CreateProductsView from "@/modules/products/views/CreateProductsView";
-import EditProductsView from "@/modules/products/views/EditProductsView";
-import CostDetailView from "@/modules/costs/views/CostDetailView";
-import AuthLayout from "@/modules/auth/layout/AuthLayout";
-import LoginView from "@/modules/auth/views/LoginView";
-import RegisterView from "@/modules/auth/views/RegisterView";
+import { createBrowserRouter, Navigate } from "react-router-dom";
+
+import {
+  NotAuthenticatedRoute,
+  AdminRoute,
+} from "@/components/routes/ProtectedRoutes";
+
 import DashboardView from "@/modules/dashboard/views/DashboardView";
 import UsersView from "@/modules/users/views/UsersView";
 import CreateUserView from "@/modules/users/views/CreateUserView";
 
-export default function Router() {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route element={<AuthLayout />}>
-          <Route path="/auth/login" element={<LoginView />} />
-          <Route path="/auth/register" element={<RegisterView />} />
-        </Route>
-        <Route path="/" element={<AppLayout />}>
-          <Route path="/dashboard" element={<DashboardView />} />
-          <Route path="/users" element={<UsersView />} />
-          <Route path="/users/create" element={<CreateUserView />} />
-          <Route path="/productos" element={<ProductsView />} />
-          <Route path="/product/create" element={<CreateProductsView />} />
-          <Route path="/product/edit/:id" element={<EditProductsView />} />
-          <Route path="/material" element={<MateriaPrimaView />} />
-          <Route path="/material/create" element={<CreateProductView />} />
-          <Route path="/material/edit/:id" element={<EditProductView />} />
-          <Route path="/units" element={<UnitsMeasurementView />} />
-          <Route path="/units/create" element={<CreateUnitView />} />
-          <Route path="/units/edit/:id" element={<EditUnitView />} />
-          <Route path="/costs" element={<CalculateCostsView />} />
-          <Route path="/costs/create" element={<CreateCostsView />} />
-          <Route path="/costs/:id" element={<CostDetailView />} />
-        </Route>
-        <Route path="/*" element={<NotFoundView />} />
-      </Routes>
-    </BrowserRouter>
-  );
-}
+import ProductsView from "@/modules/products/views/ProductsView";
+import CreateProductsView from "@/modules/products/views/CreateProductsView";
+import EditProductsView from "@/modules/products/views/EditProductsView";
+
+import MateriaPrimaView from "@/modules/material/views/MateriaPrimaView";
+import CreateProductView from "@/modules/material/views/CreateProductView";
+import EditProductView from "@/modules/material/views/EditProductView";
+
+import UnitsMeasurementView from "@/modules/units/views/UnitsMeasurementView";
+import CreateUnitView from "@/modules/units/views/CreateUnitView";
+import EditUnitView from "@/modules/units/views/EditUnitView";
+
+import CalculateCostsView from "@/modules/costs/views/CalculateCostsView";
+import CreateCostsView from "@/modules/costs/views/CreateCostsView";
+import CostDetailView from "@/modules/costs/views/CostDetailView";
+
+import LoginView from "@/modules/auth/views/LoginView";
+import RegisterView from "@/modules/auth/views/RegisterView";
+
+import NotFoundView from "@/modules/404/views/NotFoundView";
+import { lazy } from "react";
+
+const AuthLayout = lazy(() => import("../modules/auth/layout/AuthLayout.tsx"));
+const AdminLayout = lazy(
+  () => import("../modules/admin/layouts/AppLayout.tsx")
+);
+export const appRouter = createBrowserRouter([
+  {
+    path: "/auth",
+    element: (
+      <NotAuthenticatedRoute>
+        <AuthLayout />
+      </NotAuthenticatedRoute>
+    ),
+    children: [
+      {
+        index: true,
+        element: <Navigate to="/auth/login" />,
+      },
+      {
+        path: "login",
+        element: <LoginView />,
+      },
+      {
+        path: "register",
+        element: <RegisterView />,
+      },
+    ],
+  },
+
+  {
+    path: "/",
+    element: (
+      <AdminRoute>
+        <AdminLayout />
+      </AdminRoute>
+    ),
+    children: [
+      {
+        path: "dashboard",
+        element: <DashboardView />,
+      },
+      {
+        path: "users",
+        element: <UsersView />,
+      },
+      {
+        path: "users/create",
+        element: <CreateUserView />,
+      },
+      {
+        path: "productos",
+        element: <ProductsView />,
+      },
+      {
+        path: "product/create",
+        element: <CreateProductsView />,
+      },
+      {
+        path: "product/edit/:id",
+        element: <EditProductsView />,
+      },
+      {
+        path: "material",
+        element: <MateriaPrimaView />,
+      },
+      {
+        path: "material/create",
+        element: <CreateProductView />,
+      },
+      {
+        path: "material/edit/:id",
+        element: <EditProductView />,
+      },
+      {
+        path: "units",
+        element: <UnitsMeasurementView />,
+      },
+      {
+        path: "units/create",
+        element: <CreateUnitView />,
+      },
+      {
+        path: "units/edit/:id",
+        element: <EditUnitView />,
+      },
+      {
+        path: "costs",
+        element: <CalculateCostsView />,
+      },
+      {
+        path: "costs/create",
+        element: <CreateCostsView />,
+      },
+      {
+        path: "costs/:id",
+        element: <CostDetailView />,
+      },
+    ],
+  },
+
+  {
+    path: "*",
+    element: <NotFoundView />,
+  },
+]);
