@@ -6,10 +6,7 @@ import {
   type UseFormRegister,
 } from "react-hook-form";
 import type { RegistroCostosFormValues } from "../schemas";
-import useUnits from "@/hooks/useUnits";
 import { PlusCircle, Trash2 } from "lucide-react";
-import SearchSelectForm from "@/components/shared/search/SearchShared";
-import type { MeasurementForm } from "@/modules/units/schemas";
 import { useEffect } from "react";
 import useCostStore from "../store/useCostStore";
 import { formattCurrency } from "@/lib";
@@ -20,7 +17,6 @@ interface Props {
 }
 export default function ManoObraIndirectaForm({ control, register }: Props) {
   const { setValue } = useFormContext();
-  const { unidadMedida } = useUnits();
   const setTotalManoObraIndirecta = useCostStore(
     (state) => state.setTotalManoObraIndirecta
   );
@@ -63,12 +59,6 @@ export default function ManoObraIndirectaForm({ control, register }: Props) {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(manoObraIndirecta)]);
-
-  const optionsUnidad =
-    unidadMedida?.map((item: MeasurementForm) => ({
-      label: item.name,
-      value: item.name,
-    })) ?? [];
   return (
     <>
       <div className="space-y-4 mb-5">
@@ -108,11 +98,13 @@ export default function ManoObraIndirectaForm({ control, register }: Props) {
                 required: true,
               })}
             />
-            <SearchSelectForm
-              name={`manoObraIndirecta.${index}.unidadMedida`}
-              control={control}
-              options={optionsUnidad}
-              placeholder="Unidad"
+            <input
+              type="text"
+              placeholder="Unidad de Medida"
+              className="border px-3 py-2 rounded-lg"
+              {...register(`manoObraIndirecta.${index}.unidadMedida`, {
+                required: true,
+              })}
             />
 
             <input

@@ -25,6 +25,8 @@ import CalculateCostsView from "@/modules/costs/views/CalculateCostsView";
 import CreateCostsView from "@/modules/costs/views/CreateCostsView";
 import CostDetailView from "@/modules/costs/views/CostDetailView";
 
+import ConfiguracionView from "@/modules/config/views/ConfiguracionView";
+
 import LoginView from "@/modules/auth/views/LoginView";
 import RegisterView from "@/modules/auth/views/RegisterView";
 
@@ -126,6 +128,10 @@ export const appRouter = createBrowserRouter([
       {
         path: "costs/:id",
         element: <CostDetailView />,
+      },
+      {
+        path: "configuracion",
+        element: <ConfiguracionView />,
       },
     ],
   },

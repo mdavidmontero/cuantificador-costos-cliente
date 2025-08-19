@@ -7,6 +7,7 @@ interface Params {
   to: Date;
   mode: "dia" | "semana";
   productoId?: number;
+  tipoConsulta?: "costos" | "precios";
 }
 export const getEvolutionCosts = async (params: Params) => {
   try {
@@ -16,6 +17,7 @@ export const getEvolutionCosts = async (params: Params) => {
         endDate: params.to,
         modo: params.mode,
         productoId: params.productoId,
+        tipoConsulta: params.tipoConsulta || "costos",
       },
     });
 

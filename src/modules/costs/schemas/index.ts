@@ -29,6 +29,16 @@ export const RegistroCostosFormSchema = z.object({
     })
   ),
 
+  serviciosPublicos: z
+    .array(
+      z.object({
+        nombre: z.string(),
+        porcentaje: z.number(),
+        vinculadoProduccion: z.boolean(),
+      })
+    )
+    .optional(),
+
   costosIndirectosFabricacion: z.array(
     z.object({
       nombre: z.string(),
@@ -77,6 +87,12 @@ export const RegistroCostosFormSchema = z.object({
     totalCostoProduccionUnitario: z.number(),
     precioVentaUnitario: z.number(),
     margenUtilidadUnitario: z.number(),
+    margenDeseado: z.number().optional(),
+    precioCalculado: z.number().optional(),
+    impuestos: z.number().optional(),
+    costosFinancieros: z.number().optional(),
+    otrosGastos: z.number().optional(),
+    margenUtilidadNeto: z.number().optional(),
   }),
 });
 
@@ -89,6 +105,17 @@ export interface CostoProduccion {
   totalCostoProduccionUnitario: number;
   precioVentaUnitario: number;
   margenUtilidadUnitario: number;
+  margenDeseado?: number;
+  impuestos?: number;
+  costosFinancieros?: number;
+  otrosGastos?: number;
+  margenUtilidadNeto?: number;
+}
+
+export interface ServicioPublico {
+  nombre: string;
+  porcentaje: number;
+  vinculadoProduccion: boolean;
 }
 
 export const materiaPrimaDirectaSchema = z.object({
@@ -151,12 +178,28 @@ export const CostoProduccionZod = z.object({
   totalCostoProduccionUnitario: z.number(),
   precioVentaUnitario: z.number(),
   margenUtilidadUnitario: z.number(),
+  margenDeseado: z.number().nullable().optional(),
+  precioCalculado: z.number().nullable().optional(),
+  impuestos: z.number().nullable().optional(),
+  costosFinancieros: z.number().nullable().optional(),
+  otrosGastos: z.number().nullable().optional(),
+  margenUtilidadNeto: z.number().nullable().optional(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
   organizationId: z.string(),
 });
 
 // SchemaCost principal
+export const ServicioPublicoZod = z.object({
+  id: z.number(),
+  nombre: z.string(),
+  porcentaje: z.number(),
+  vinculadoProduccion: z.boolean(),
+  organizationId: z.string(),
+  registroId: z.string().nullable(),
+  createdAt: z.coerce.date(),
+});
+
 export const SchemaCostZod = z.object({
   id: z.string(),
   date: z.coerce.date(),
@@ -178,6 +221,7 @@ export const SchemaCostZod = z.object({
     .array(CostosIndirectosFabricacionZod)
     .optional(),
   manoObraIndirecta: z.array(CostosIndirectosFabricacionZod).optional(),
+  serviciosPublicos: z.array(ServicioPublicoZod).optional(),
   costosGenerales: z.array(CostosGeneraleZod).optional(),
   costosOperacion: z.array(z.any()).optional(),
   gastosVentas: z.array(CostosGeneraleZod).optional(),

@@ -6,12 +6,10 @@ import {
   type UseFormRegister,
 } from "react-hook-form";
 import type { RegistroCostosFormValues } from "../schemas";
-import useUnits from "@/hooks/useUnits";
-import { PlusCircle, Trash2 } from "lucide-react";
-import SearchSelectForm from "@/components/shared/search/SearchShared";
-import type { MeasurementForm } from "@/modules/units/schemas";
-import { useEffect } from "react";
+import { PlusCircle, Trash2, Info } from "lucide-react";
+import { useEffect, useState } from "react";
 import useCostStore from "../store/useCostStore";
+import useConfigStore from "@/modules/config/store/useConfigStore";
 import { formattCurrency } from "@/lib";
 
 interface Props {
@@ -21,20 +19,20 @@ interface Props {
 
 export default function ManoObraDirectaForm({ control, register }: Props) {
   const { setValue } = useFormContext();
-  const { unidadMedida } = useUnits();
   const setTotalManoObraDirecta = useCostStore(
     (state) => state.setTotalManoObraDirecta
   );
   const totalManoObraDirecta = useCostStore(
     (state) => state.totalManoObraDirecta
   );
-
-  const { fields, append, remove } = useFieldArray({
+  const manoObraDirecta = useWatch({
     control,
     name: "manoObraDirecta",
   });
 
-  const manoObraDirecta = useWatch({
+  const [showSalarioInfo, setShowSalarioInfo] = useState(false);
+  const salarioMinimoLegal = useConfigStore((state) => state.salarioMinimoLegal);
+  const { fields, append, remove } = useFieldArray({
     control,
     name: "manoObraDirecta",
   });
@@ -66,19 +64,23 @@ export default function ManoObraDirectaForm({ control, register }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(manoObraDirecta)]);
 
-  const optionsUnidad =
-    unidadMedida?.map((item: MeasurementForm) => ({
-      label: item.name,
-      value: item.name,
-    })) ?? [];
-
   return (
     <>
       <div className="space-y-4 mb-5">
         <div className="flex items-center justify-between">
-          <h2 className="font-bold uppercase text-gray-800">
-            Mano de Obra Directa
-          </h2>
+          <div className="flex items-center gap-2">
+            <h2 className="font-bold uppercase text-gray-800">
+              Mano de Obra Directa
+            </h2>
+            <button
+              type="button"
+              onClick={() => setShowSalarioInfo(!showSalarioInfo)}
+              className="text-blue-600 hover:text-blue-800"
+              title="Información sobre salario mínimo"
+            >
+              <Info size={18} />
+            </button>
+          </div>
           <button
             type="button"
             onClick={() =>
@@ -97,6 +99,26 @@ export default function ManoObraDirectaForm({ control, register }: Props) {
           </button>
         </div>
 
+        {showSalarioInfo && (
+          <div className="bg-blue-50 border border-blue-200 rounded-md p-4 mb-4">
+            <h4 className="font-semibold text-blue-800 mb-2">
+              Marco de Referencia - Salario Mínimo Legal Vigente
+            </h4>
+            <p className="text-sm text-gray-700 mb-2">
+              El salario mínimo legal vigente es:{" "}
+              <span className="font-bold">
+                {formattCurrency(salarioMinimoLegal)}
+              </span>{" "}
+              mensual
+            </p>
+            <p className="text-sm text-gray-700">
+              Este valor puede servir como referencia para calcular los costos
+              de mano de obra directa, considerando las horas trabajadas y el
+              tipo de contratación.
+            </p>
+          </div>
+        )}
+
         {fields.map((field, index) => (
           <div key={field.id} className="grid grid-cols-1 md:grid-cols-6 gap-3">
             <input
@@ -108,11 +130,13 @@ export default function ManoObraDirectaForm({ control, register }: Props) {
               })}
             />
 
-            <SearchSelectForm
-              name={`manoObraDirecta.${index}.unidadMedida`}
-              control={control}
-              options={optionsUnidad}
-              placeholder="Unidad"
+            <input
+              type="text"
+              placeholder="Unidad de Medida"
+              className="border px-3 py-2 rounded-lg"
+              {...register(`manoObraDirecta.${index}.unidadMedida`, {
+                required: true,
+              })}
             />
 
             <input

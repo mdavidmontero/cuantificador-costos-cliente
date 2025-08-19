@@ -88,20 +88,20 @@ export default function UsersView() {
                 <Ruler className="h-12 w-12 text-purple-600" />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                ¡Define tu primera unidad de medida!
+                Añade los usuarios que colaboran en el sistema
               </h3>
               <p className="text-gray-600 mb-6 max-w-md mx-auto">
-                No tienes unidades de medida registradas. Comienza definiendo
-                las unidades básicas para estandarizar tus procesos.
+                No tienes usuarios registrados. Crea tu primer usuario para que
+                colaboren en el sistema.
               </p>
               <Button
                 asChild
                 size="lg"
                 className="bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-700 hover:to-violet-700 text-white shadow-lg hover:shadow-xl transition-all duration-200"
               >
-                <Link to="/units/create" className="flex items-center gap-2">
+                <Link to="/users/create" className="flex items-center gap-2">
                   <Plus className="h-5 w-5" />
-                  Crear Primera Unidad
+                  Crear Usuario
                 </Link>
               </Button>
             </CardContent>

@@ -1,6 +1,7 @@
 import {
   type Control,
   type UseFormRegister,
+  type UseFormSetValue,
   type UseFormWatch,
 } from "react-hook-form";
 import type { RegistroCostosFormValues } from "../schemas";
@@ -23,9 +24,15 @@ export interface Props {
   control: Control<RegistroCostosFormValues>;
   register: UseFormRegister<RegistroCostosFormValues>;
   watch: UseFormWatch<RegistroCostosFormValues>;
+  setValue: UseFormSetValue<RegistroCostosFormValues>;
 }
 
-export default function CostForm({ register, control, watch }: Props) {
+export default function CostForm({
+  register,
+  control,
+  watch,
+  setValue,
+}: Props) {
   const cantidadFinal = watch("cantidadesFinales");
   const precioVentaUnitario = watch("costoProduccion.precioVentaUnitario");
   const { data: productos } = useQuery({
@@ -228,6 +235,7 @@ export default function CostForm({ register, control, watch }: Props) {
       <ConsolidadoCostos
         control={control}
         register={register}
+        setValue={setValue}
         totalCostosIndirectoFabricaciones={totalCostosIndirectoFabricaciones}
         totalCostosdeProduccion={totalCostosdeProduccion}
         costoProduccionUnitario={costoProduccionUnitario}

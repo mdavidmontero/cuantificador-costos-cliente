@@ -19,6 +19,11 @@ import {
   Calculator,
   Target,
   Percent,
+  PiggyBank,
+  Receipt,
+  CreditCard,
+  Banknote,
+  TrendingDown,
 } from "lucide-react";
 
 export default function CostDetailView() {
@@ -58,6 +63,7 @@ export default function CostDetailView() {
     costosIndirectosFabricacion = [],
     costosGenerales = [],
     gastosVentas = [],
+    serviciosPublicos = [],
   } = data;
 
   return (
@@ -267,6 +273,110 @@ export default function CostDetailView() {
         </Card>
       )}
 
+      {/* Análisis de Márgenes y Costos Adicionales */}
+      {costoProduccion && (
+        <Card className="shadow-lg border-0">
+          <CardHeader className="bg-gradient-to-r from-indigo-600 to-indigo-700 text-white rounded-t-lg">
+            <CardTitle className="flex items-center gap-2 text-xl">
+              <PiggyBank className="h-5 w-5" />
+              Análisis de Márgenes y Costos Adicionales
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-6">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {costoProduccion.margenDeseado != null && (
+                <div className="bg-gradient-to-br from-cyan-50 to-cyan-100 p-4 rounded-lg border border-cyan-200">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Target className="h-4 w-4 text-cyan-600" />
+                    <p className="text-sm font-medium text-cyan-800">
+                      Margen Deseado
+                    </p>
+                  </div>
+                  <p className="text-2xl font-bold text-cyan-900">
+                    {costoProduccion.margenDeseado.toFixed(2)}%
+                  </p>
+                </div>
+              )}
+
+              {costoProduccion.precioCalculado != null && (
+                <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-4 rounded-lg border border-purple-200">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Calculator className="h-4 w-4 text-purple-600" />
+                    <p className="text-sm font-medium text-purple-800">
+                      Precio Calculado
+                    </p>
+                  </div>
+                  <p className="text-2xl font-bold text-purple-900">
+                    {formattCurrency(costoProduccion.precioCalculado)}
+                  </p>
+                  {costoProduccion.margenDeseado != null && (
+                    <p className="text-xs text-purple-600 mt-1">
+                      Basado en margen deseado del {costoProduccion.margenDeseado.toFixed(2)}%
+                    </p>
+                  )}
+                </div>
+              )}
+
+              {costoProduccion.impuestos != null && (
+                <div className="bg-gradient-to-br from-red-50 to-red-100 p-4 rounded-lg border border-red-200">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Receipt className="h-4 w-4 text-red-600" />
+                    <p className="text-sm font-medium text-red-800">
+                      Impuestos
+                    </p>
+                  </div>
+                  <p className="text-2xl font-bold text-red-900">
+                    {costoProduccion.impuestos.toFixed(2)}%
+                  </p>
+                </div>
+              )}
+
+              {costoProduccion.costosFinancieros != null && (
+                <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 p-4 rounded-lg border border-yellow-200">
+                  <div className="flex items-center gap-2 mb-2">
+                    <CreditCard className="h-4 w-4 text-yellow-600" />
+                    <p className="text-sm font-medium text-yellow-800">
+                      Costos Financieros
+                    </p>
+                  </div>
+                  <p className="text-2xl font-bold text-yellow-900">
+                    {costoProduccion.costosFinancieros.toFixed(2)}%
+                  </p>
+                </div>
+              )}
+
+              {costoProduccion.otrosGastos != null && (
+                <div className="bg-gradient-to-br from-pink-50 to-pink-100 p-4 rounded-lg border border-pink-200">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Banknote className="h-4 w-4 text-pink-600" />
+                    <p className="text-sm font-medium text-pink-800">
+                      Otros Gastos
+                    </p>
+                  </div>
+                  <p className="text-2xl font-bold text-pink-900">
+                    {costoProduccion.otrosGastos.toFixed(2)}%
+                  </p>
+                </div>
+              )}
+
+              {costoProduccion.margenUtilidadNeto != null && (
+                <div className="bg-gradient-to-br from-emerald-50 to-emerald-100 p-4 rounded-lg border border-emerald-200">
+                  <div className="flex items-center gap-2 mb-2">
+                    <TrendingDown className="h-4 w-4 text-emerald-600" />
+                    <p className="text-sm font-medium text-emerald-800">
+                      Margen Utilidad Neto
+                    </p>
+                  </div>
+                  <p className="text-2xl font-bold text-emerald-900">
+                    {costoProduccion.margenUtilidadNeto.toFixed(2)}%
+                  </p>
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Tablas Detalladas */}
       <div className="space-y-6">
         <h2 className="text-2xl font-bold text-gray-900 text-center mb-6">
@@ -290,6 +400,12 @@ export default function CostDetailView() {
             title="Costos Indirectos de Fabricación"
             data={costosIndirectosFabricacion}
           />
+          {serviciosPublicos.length > 0 && (
+            <DetalleCostoTable
+              title="Servicios Públicos"
+              data={serviciosPublicos}
+            />
+          )}
           <DetalleCostoTable title="Costos Generales" data={costosGenerales} />
           <DetalleCostoTable title="Gastos de Venta" data={gastosVentas} />
         </div>

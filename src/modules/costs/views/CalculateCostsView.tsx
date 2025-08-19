@@ -91,7 +91,19 @@ export default function CalculateCostsView() {
             </CardContent>
           </Card>
         ) : data?.length ? (
-          <ListCost data={data || []} />
+          <>
+            <ListCost data={data || []} />
+
+            {/* <div className="mt-10">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="p-2 bg-gradient-to-br from-blue-500 to-teal-600 rounded-lg shadow-md">
+                  <LineChart className="h-6 w-6 text-white" />
+                </div>
+                <h2 className="text-2xl font-bold text-gray-800">Evolución Histórica</h2>
+              </div>
+              <HistoricoCostosPrecios />
+            </div> */}
+          </>
         ) : (
           <Card className="shadow-lg border-0">
             <CardContent className="p-12 text-center">

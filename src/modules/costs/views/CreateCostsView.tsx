@@ -52,7 +52,7 @@ export default function CreateCostsView() {
     },
   });
 
-  const { control, handleSubmit } = methods;
+  const { control, handleSubmit, setValue } = methods;
 
   const { mutate, isPending } = useMutation({
     mutationFn: createCost,
@@ -79,6 +79,7 @@ export default function CreateCostsView() {
       manoObraDirecta: data.manoObraDirecta,
       costosIndirectosFabricacion: data.costosIndirectosFabricacion,
       manoObraIndirecta: data.manoObraIndirecta,
+      serviciosPublicos: data.serviciosPublicos,
       costosGenerales: data.costosGenerales,
       costosOperacion: data.costosOperacion,
       gastosVentas: data.gastosVentas,
@@ -89,6 +90,11 @@ export default function CreateCostsView() {
         totalCostoProduccionUnitario: totalCostoProduccionUnitario,
         precioVentaUnitario: data.costoProduccion.precioVentaUnitario,
         margenUtilidadUnitario: margenUtilidadUnitario,
+        margenDeseado: data.costoProduccion.margenDeseado,
+        impuestos: data.costoProduccion.impuestos,
+        costosFinancieros: data.costoProduccion.costosFinancieros,
+        otrosGastos: data.costoProduccion.otrosGastos,
+        margenUtilidadNeto: data.costoProduccion.margenUtilidadNeto,
       },
     };
     console.log("datos", formData);
@@ -112,6 +118,7 @@ export default function CreateCostsView() {
           className="mt-10 bg-white shadow-lg p-10 rounded-lg space-y-8"
         >
           <CostForm
+            setValue={setValue}
             control={control}
             register={methods.register}
             watch={methods.watch}

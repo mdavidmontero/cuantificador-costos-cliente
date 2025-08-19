@@ -1,11 +1,18 @@
-import type { CostosGenerale, CostosIndirectosFabricacion } from "../schemas";
+import type {
+  CostosGenerale,
+  CostosIndirectosFabricacion,
+  ServicioPublico,
+} from "../schemas";
 import { formattCurrency } from "@/lib";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Package2, Hash, DollarSign, Calculator } from "lucide-react";
 
-type DetalleCosto = CostosGenerale | CostosIndirectosFabricacion;
+type DetalleCosto =
+  | CostosGenerale
+  | CostosIndirectosFabricacion
+  | ServicioPublico;
 
 interface Props {
   title: string;
@@ -22,7 +29,32 @@ function getCantidad(item: DetalleCosto) {
 }
 
 function getCosto(item: DetalleCosto) {
-  return "costoTotal" in item ? item.costoTotal : item.valorTotal;
+  if ("costoTotal" in item) return item.costoTotal;
+  if ("valorTotal" in item) return item.valorTotal;
+  if ("porcentaje" in item) return item.porcentaje; // Para servicios públicos
+  return 0;
+}
+
+function formatearValor(item: DetalleCosto) {
+  if ("porcentaje" in item) {
+    return `${item.porcentaje.toFixed(2)}%`;
+  }
+  return formattCurrency(getCosto(item));
+}
+
+function calcularTotal(data: DetalleCosto[], title: string) {
+  if (title === "Servicios Públicos") {
+    // Para servicios públicos, no sumamos porcentajes
+    return null;
+  }
+  return data.reduce((acc, item) => acc + getCosto(item), 0);
+}
+
+function formatearTotal(total: number | null) {
+  if (total === null) {
+    return "N/A";
+  }
+  return formattCurrency(total);
 }
 
 // Función para obtener el color del tema basado en el título
@@ -67,6 +99,12 @@ function getThemeColor(title: string) {
       text: "text-rose-900",
       icon: "text-rose-600",
     },
+    "Servicios Públicos": {
+      bg: "from-indigo-600 to-indigo-700",
+      border: "border-indigo-200",
+      text: "text-indigo-900",
+      icon: "text-indigo-600",
+    },
   };
 
   return (
@@ -108,7 +146,7 @@ export default function DetalleCostoTable({ title, data }: Props) {
     );
   }
 
-  const totalGeneral = data.reduce((acc, item) => acc + getCosto(item), 0);
+  const totalGeneral = calcularTotal(data, title);
   const themeColors = getThemeColor(title);
 
   return (
@@ -178,7 +216,7 @@ export default function DetalleCostoTable({ title, data }: Props) {
                   </td>
                   <td className="px-6 py-4 text-right">
                     <span className="text-sm font-semibold text-gray-900">
-                      {formattCurrency(getCosto(item))}
+                      {formatearValor(item)}
                     </span>
                   </td>
                 </tr>
@@ -198,7 +236,7 @@ export default function DetalleCostoTable({ title, data }: Props) {
             </div>
             <div className="text-right">
               <p className="text-2xl font-bold">
-                {formattCurrency(totalGeneral)}
+                {formatearTotal(totalGeneral)}
               </p>
               <p className="text-sm opacity-90">
                 Suma de {data.length}{" "}
@@ -214,23 +252,33 @@ export default function DetalleCostoTable({ title, data }: Props) {
             <div className="text-center">
               <p className="text-gray-500 font-medium">Promedio por Concepto</p>
               <p className={`font-semibold ${themeColors.text}`}>
-                {formattCurrency(totalGeneral / data.length)}
+                {totalGeneral !== null
+                  ? formattCurrency(totalGeneral / data.length)
+                  : "N/A"}
               </p>
             </div>
             <div className="text-center">
               <p className="text-gray-500 font-medium">Concepto Mayor</p>
               <p className={`font-semibold ${themeColors.text}`}>
-                {formattCurrency(
-                  Math.max(...data.map((item) => getCosto(item)))
-                )}
+                {title === "Servicios Públicos"
+                  ? `${Math.max(...data.map((item) => getCosto(item))).toFixed(
+                      2
+                    )}%`
+                  : formattCurrency(
+                      Math.max(...data.map((item) => getCosto(item)))
+                    )}
               </p>
             </div>
             <div className="text-center">
               <p className="text-gray-500 font-medium">Concepto Menor</p>
               <p className={`font-semibold ${themeColors.text}`}>
-                {formattCurrency(
-                  Math.min(...data.map((item) => getCosto(item)))
-                )}
+                {title === "Servicios Públicos"
+                  ? `${Math.min(...data.map((item) => getCosto(item))).toFixed(
+                      2
+                    )}%`
+                  : formattCurrency(
+                      Math.min(...data.map((item) => getCosto(item)))
+                    )}
               </p>
             </div>
           </div>
