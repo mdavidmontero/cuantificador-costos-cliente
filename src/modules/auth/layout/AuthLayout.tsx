@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+import { Outlet } from "react-router";
 import { Calculator, TrendingUp, BarChart3, Shield } from "lucide-react";
 // import { useAuth } from "../hooks/useAuth";
 

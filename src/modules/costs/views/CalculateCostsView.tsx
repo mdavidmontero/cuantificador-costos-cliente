@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { getCostsAll } from "../actions/get-cost-by-id";
 import ListCost from "../components/LisCost";
 import { Button } from "@/components/ui/button";

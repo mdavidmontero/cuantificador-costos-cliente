@@ -22,7 +22,7 @@ import {
   SidebarFooter,
 } from "@/components/ui/sidebar";
 import { Badge } from "@/components/ui/badge";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 
 const navigationItems = [
   {

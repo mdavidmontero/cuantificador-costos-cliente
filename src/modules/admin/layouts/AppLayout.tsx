@@ -2,7 +2,7 @@ import type React from "react";
 import { AppSidebar } from "@/components/shared/dashboard/AdminSidebar";
 import { SiteHeader } from "@/components/shared/dashboard/SiteHeader";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { Outlet } from "react-router-dom";
+import { Outlet } from "react-router";
 import { TopLoader } from "@/components/TopLoader";
 
 export default function AppLayout() {

@@ -1,7 +1,7 @@
 "use client";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import type { productSchemaFormData } from "../schemas";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";

@@ -1,6 +1,6 @@
 "use client";
 
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import ListMaterial from "../components/ListMaterial";
 import { useQuery } from "@tanstack/react-query";
 import { getMateriaPrimas } from "../actions/get-materials.actions";

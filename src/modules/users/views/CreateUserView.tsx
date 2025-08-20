@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft, Loader2, Ruler, Save, User, UsersIcon } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import type { UserSchemaFormData } from "../schemas";
 import ErrorMessage from "@/components/shared/ErrorMessage";
 import { createUserOrganization } from "../actions/create-user.actions";

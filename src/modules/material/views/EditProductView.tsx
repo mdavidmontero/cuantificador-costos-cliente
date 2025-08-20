@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { Navigate, useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router";
 import { getMateriaPrimaById } from "../actions/get-material-by-id";
 import EditMaterialForm from "../components/EditMaterialForm";
 import SpinnerShared from "@/components/shared/spinner/SpinnerShared";

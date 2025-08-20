@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import type { EditMaterialForm } from "../schemas";
 import { updateMateriaPrima } from "../actions/update-material.actions";
 import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import ErrorMessage from "@/components/shared/ErrorMessage";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Loader2, Package2, Save } from "lucide-react";

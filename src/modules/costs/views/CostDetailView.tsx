@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { useParams } from "react-router-dom";
+import { useParams } from "react-router";
 import { getCostById } from "../actions/get-cost-by-id";
 import { formattCurrency, formattDate } from "@/lib";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -311,7 +311,8 @@ export default function CostDetailView() {
                   </p>
                   {costoProduccion.margenDeseado != null && (
                     <p className="text-xs text-purple-600 mt-1">
-                      Basado en margen deseado del {costoProduccion.margenDeseado.toFixed(2)}%
+                      Basado en margen deseado del{" "}
+                      {costoProduccion.margenDeseado.toFixed(2)}%
                     </p>
                   )}
                 </div>

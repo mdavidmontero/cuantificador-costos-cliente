@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { Navigate, useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router";
 import SpinnerShared from "@/components/shared/spinner/SpinnerShared";
 import { getProductById } from "../actions/get-product-by-id";
 import EditProductsForm from "../components/EditProductsForm";

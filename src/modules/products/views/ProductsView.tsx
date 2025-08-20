@@ -2,7 +2,7 @@
 
 import SpinnerShared from "@/components/shared/spinner/SpinnerShared";
 import { useQuery } from "@tanstack/react-query";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { getProducts } from "../actions/get-products.actions";
 import ListProducts from "../components/ListProducts";
 import { Button } from "@/components/ui/button";
