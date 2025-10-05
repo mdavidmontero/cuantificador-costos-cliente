@@ -97,8 +97,6 @@ export default function CreateCostsView() {
         margenUtilidadNeto: data.costoProduccion.margenUtilidadNeto,
       },
     };
-    console.log("datos", formData);
-    // return;
     mutate(formData);
   };
 

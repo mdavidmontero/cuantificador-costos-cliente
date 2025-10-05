@@ -33,10 +33,8 @@ import RegisterView from "@/modules/auth/views/RegisterView";
 import NotFoundView from "@/modules/404/views/NotFoundView";
 import { lazy } from "react";
 
-const AuthLayout = lazy(() => import("../modules/auth/layout/AuthLayout.tsx"));
-const AdminLayout = lazy(
-  () => import("../modules/admin/layouts/AppLayout.tsx")
-);
+const AuthLayout = lazy(() => import("../modules/auth/layout/AuthLayout"));
+const AdminLayout = lazy(() => import("../modules/admin/layouts/AppLayout"));
 export const appRouter = createBrowserRouter([
   {
     path: "/auth",
@@ -70,7 +68,7 @@ export const appRouter = createBrowserRouter([
     ),
     children: [
       {
-        path: "dashboard",
+        index: true,
         element: <DashboardView />,
       },
       {

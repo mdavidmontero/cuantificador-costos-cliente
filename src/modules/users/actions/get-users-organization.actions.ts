@@ -6,7 +6,6 @@ export const getUsersOrganization = async () => {
   try {
     const { data } = await costsApi.get(`/auth/get-users-all-organization`);
     const response = ListSchemaUserSchema.safeParse(data);
-    console.log(response);
     if (response.success) {
       return response.data;
     }

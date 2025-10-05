@@ -6,7 +6,6 @@ export async function getUser() {
   try {
     const { data } = await costsApi("/auth/user");
     const response = userSchema.safeParse(data);
-    console.log(response);
     if (response.success) {
       return response.data;
     }

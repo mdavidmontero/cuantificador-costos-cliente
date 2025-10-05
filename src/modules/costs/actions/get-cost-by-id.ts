@@ -20,7 +20,6 @@ export const getCostsAll = async () => {
   try {
     const { data } = await costsApi.get("/costs/get-all-costs");
     const response = schemaListCostsZod.safeParse(data);
-    console.log(response);
     if (response.success) {
       return response.data;
     }

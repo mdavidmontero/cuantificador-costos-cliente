@@ -55,7 +55,6 @@ export default function CreateUserView() {
   });
 
   const onSubmit = (formData: UserSchemaFormData) => {
-    console.log(formData);
     mutate(formData);
   };
 

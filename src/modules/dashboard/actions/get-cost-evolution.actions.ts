@@ -22,7 +22,6 @@ export const getEvolutionCosts = async (params: Params) => {
     });
 
     const response = costEvolutionArraySchema.safeParse(data);
-    console.log(response);
     if (response.success) {
       return response.data;
     }

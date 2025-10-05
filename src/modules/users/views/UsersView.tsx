@@ -12,7 +12,6 @@ export default function UsersView() {
     queryKey: ["getUsersAll"],
     queryFn: getUsersOrganization,
   });
-  console.log(data);
   return (
     <div className="space-y-8">
       <div className="relative">

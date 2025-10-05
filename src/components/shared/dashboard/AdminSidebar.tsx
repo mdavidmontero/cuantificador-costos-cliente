@@ -28,7 +28,7 @@ const navigationItems = [
   {
     title: "Principal",
     items: [
-      { title: "Dashboard", url: "/dashboard", icon: Home, badge: null },
+      { title: "Dashboard", url: "/", icon: Home, badge: null },
       { title: "Productos", url: "/productos", icon: Package, badge: "12" },
       { title: "Costos", url: "/costs", icon: Calculator, badge: null },
       { title: "Unidades", url: "/units", icon: Calculator, badge: null },
