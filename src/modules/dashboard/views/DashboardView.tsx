@@ -61,51 +61,56 @@ interface Product {
 export default function DashboardView() {
   const [modo, setModo] = useState<"dia" | "semana">("dia");
   const [dateSelected, setDateSelected] = useState<{
-    from: Date | undefined;
-    to: Date | undefined;
+    from?: Date;
+    to?: Date;
   }>({
     from: addDays(new Date(), -5),
     to: addDays(new Date(), 5),
   });
-  const [productoId, setProductoId] = useState<number | undefined>(undefined);
+  const [productoId, setProductoId] = useState<number | undefined>();
 
   const { data, isLoading } = useQuery({
     queryKey: [
       "cost-evolution",
       modo,
-      dateSelected.from,
-      dateSelected.to,
+      dateSelected?.from,
+      dateSelected?.to,
       productoId,
     ],
-    queryFn: () =>
-      getEvolutionCosts({
-        from: dateSelected.from!,
-        to: dateSelected.to!,
+    queryFn: async () => {
+      if (!dateSelected?.from || !dateSelected?.to) return [];
+      return getEvolutionCosts({
+        from: dateSelected.from,
+        to: dateSelected.to,
         mode: modo,
-        productoId: productoId,
-      }),
-    enabled: !!dateSelected.from && !!dateSelected.to && !!modo,
+        productoId,
+      });
+    },
+    enabled: !!dateSelected?.from && !!dateSelected?.to,
   });
 
-  const { data: productos, isLoading: isLoadingProducts } = useQuery({
+  const { data: productos = [], isLoading: isLoadingProducts } = useQuery({
     queryKey: ["productos"],
     queryFn: getProducts,
   });
 
   const transformedData = useMemo(() => {
-    if (!data || !Array.isArray(data)) return [];
-
-    return data.map((item) => ({
-      label: format(
-        new Date(item.fecha),
-        modo === "dia" ? "dd MMM" : "'Sem' w",
-        { locale: es }
-      ),
-      fecha: item.fecha,
-      total: item.costoUnitario,
-      costoUnitario: item.costoUnitario,
-      margenUtilidadUnitario: item.margenUtilidadUnitario,
-    }));
+    if (!Array.isArray(data)) return [];
+    return data
+      .filter((item) => !!item?.fecha && !isNaN(new Date(item.fecha).getTime()))
+      .map((item) => ({
+        label: format(
+          new Date(item.fecha),
+          modo === "dia" ? "dd MMM" : "'Sem' w",
+          {
+            locale: es,
+          }
+        ),
+        fecha: item.fecha,
+        total: item?.costoUnitario ?? 0,
+        costoUnitario: item?.costoUnitario ?? 0,
+        margenUtilidadUnitario: item?.margenUtilidadUnitario ?? 0,
+      }));
   }, [data, modo]);
 
   const statistics = useMemo(() => {
@@ -160,9 +165,9 @@ export default function DashboardView() {
 
   // Get selected product name
   const selectedProductName = useMemo(() => {
-    if (!productoId || !productos) return "Todos los productos";
-    const product = productos.find((p: Product) => p.id === productoId);
-    return product ? product.nombre : "Todos los productos";
+    if (!productoId) return "Todos los productos";
+    const product = productos?.find((p) => p?.id === productoId);
+    return product?.nombre ?? "Todos los productos";
   }, [productoId, productos]);
 
   // Product Selector Component

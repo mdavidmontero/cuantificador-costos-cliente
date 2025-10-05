@@ -3,12 +3,14 @@
 import type React from "react";
 import { Card } from "@/components/ui/card";
 import { CalendarSelector } from "./CalendarSelector";
+import { useCallback } from "react";
 
 interface Props {
+  // 👇 acepta tu tipo flexible (el que usas en otros componentes)
   setDateSelected: React.Dispatch<
     React.SetStateAction<{
-      from: Date | undefined;
-      to: Date | undefined;
+      from?: Date;
+      to?: Date;
     }>
   >;
   showCard?: boolean;
@@ -24,6 +26,28 @@ export default function CalendarFilter({
   maxDate,
   minDate,
 }: Props) {
+  // 👇 adaptamos el setter al tipo que CalendarSelector espera
+  const handleSetDateSelected = useCallback<
+    React.Dispatch<
+      React.SetStateAction<{
+        from: Date | undefined;
+        to: Date | undefined;
+      }>
+    >
+  >(
+    (value) => {
+      // soporta tanto funciones como valores directos
+      setDateSelected((prev) => {
+        const prevSafe = { from: prev.from, to: prev.to };
+        if (typeof value === "function") {
+          return value(prevSafe);
+        }
+        return value;
+      });
+    },
+    [setDateSelected]
+  );
+
   const content = (
     <div className="flex items-center gap-3">
       <div className="hidden sm:block">
@@ -35,7 +59,8 @@ export default function CalendarFilter({
         </div>
       </div>
       <CalendarSelector
-        setDateSelected={setDateSelected}
+        // 👇 se pasa el adaptador, no el setter original
+        setDateSelected={handleSetDateSelected}
         placeholder={placeholder}
         maxDate={maxDate}
         minDate={minDate}
